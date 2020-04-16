@@ -1,26 +1,22 @@
-# use debian as base image
-FROM debian:latest
+# Use Debian Buster as a base image
+FROM debian:10.3
 
-# get list of installable packets and install wget
-RUN apt-get update && \
-    apt-get -y install \
-        'wget'
+WORKDIR "/root"
 
-# download snap installer version 7.0
-RUN wget http://step.esa.int/downloads/7.0/installers/esa-snap_sentinel_unix_7_0.sh
+# Download and install ESA SNAP version 7.0 / raise JVM memory limit up to 4GB
+RUN apt-get -q update \
+    && apt-get -y install wget \
+    && wget -q http://step.esa.int/downloads/7.0/installers/esa-snap_sentinel_unix_7_0.sh \
+    && apt-get -y purge --auto-remove wget \
+    && rm -rf /var/lib/apt/lists/* \
+    && chmod +x esa-snap_sentinel_unix_7_0.sh \
+    && ./esa-snap_sentinel_unix_7_0.sh -q \
+    && rm esa-snap_sentinel_unix_7_0.sh \
+    && sed -i -e 's/-Xmx1G/-Xmx4G/g' /usr/local/snap/bin/gpt.vmoptions
 
-#change file execution rights for snap installer
-RUN chmod +x esa-snap_sentinel_unix_7_0.sh
+ENV LD_LIBRARY_PATH .
+ENV PATH /usr/local/snap/bin:$PATH
 
-# install snap with gpt
-RUN ./esa-snap_sentinel_unix_7_0.sh -q
-
-# link gpt so it can be used systemwide
-RUN ln -s /usr/local/snap/bin/gpt /usr/bin/gpt
-
-# set gpt max memory to 4GB
-RUN sed -i -e 's/-Xmx1G/-Xmx4G/g' /usr/local/snap/bin/gpt.vmoptions
-
-# set entrypoint
+# Set entrypoint to Graph Processing Tool executable
 ENTRYPOINT ["/usr/local/snap/bin/gpt"]
 CMD ["-h"]
