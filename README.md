@@ -22,6 +22,8 @@ docker pull valv/esa-snap
 
 ## Run container
 
+### Command line
+
 Show help for complete list of command-line options:
 
 ```shell
@@ -69,11 +71,15 @@ Graph file _myGraph.xml_ has nodes for input and output files (note file paths):
 
 > NOTE: instead of passing graph file, one can pass operations to GPT.
 
+### Graphical interface
+
 Run SNAP interactively with GUI:
 
 ```shell
-docker run --rm -ti -v ~/snap:/root/snap
+docker run --rm --entrypoint /bin/bash -ti -v /tmp/.X11-unix:/tmp/.X11-unix -e DISPLAY=$DISPLAY -v ~/snap:/root/snap valv/esa-snap
 ```
+
+> NOTE: the option above works only for X11 windowing system, and to be able to connect from the container, one should do either `xhost +local:` or `xhost +si:localuser:root`.
 
 ## About ESA SNAP
 

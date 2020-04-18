@@ -5,7 +5,7 @@ WORKDIR "/root"
 
 # Download and install ESA SNAP version 7.0 / raise JVM memory limit up to 4GB
 RUN apt-get -q update \
-    && apt-get -y install wget \
+    && apt -y install libxtst6 libxrender1 libxxf86vm1 wget \
     && wget -q http://step.esa.int/downloads/7.0/installers/esa-snap_sentinel_unix_7_0.sh \
     && apt-get -y purge --auto-remove wget \
     && rm -rf /var/lib/apt/lists/* \
