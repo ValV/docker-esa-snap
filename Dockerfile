@@ -14,7 +14,7 @@ RUN export DEBIAN_FRONTEND=noninteractive && apt update --yes \
     && rm esa-snap_sentinel_unix_7_0.sh \
     && rm -rf /usr/local/snap/jre \
     && ln -s /usr/lib/jvm/java-8-openjdk-amd64/jre /usr/local/snap/jre \
-    && sed -i -e 's/-Xmx1G/-Xmx4G/g' /usr/local/snap/bin/gpt.vmoptions
+    && sed -i -e 's/-Xmx\S\+G/-Xmx4G/g' /usr/local/snap/bin/gpt.vmoptions
 
 ENV LD_LIBRARY_PATH .
 ENV PATH /usr/local/snap/bin:$PATH
