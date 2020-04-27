@@ -1,13 +1,13 @@
-# Use Ubuntu Xenial as a base image
-FROM --platform=amd64 ubuntu:16.04
+# Use Ubuntu Bionic as a base image
+FROM --platform=amd64 ubuntu:18.04
 
 WORKDIR "/root"
 
 # Download and install ESA SNAP version 7.0 / raise JVM memory limit up to 4GB
-RUN apt-get -q update \
-    && apt -y install openjdk-8-jre wget \
+RUN export DEBIAN_FRONTEND=noninteractive && apt update --yes \
+    && apt install --yes --no-install-recommends openjdk-8-jre wget \
     && wget -q http://step.esa.int/downloads/7.0/installers/esa-snap_sentinel_unix_7_0.sh \
-    && apt-get -y purge --auto-remove wget \
+    && apt purge --yes --auto-remove wget \
     && rm -rf /var/lib/apt/lists/* \
     && chmod +x esa-snap_sentinel_unix_7_0.sh \
     && ./esa-snap_sentinel_unix_7_0.sh -q \
